@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <!--made by Dr Dipankar Dutta. -->
+	<title>e-smRSq for modified Rankin Scale scoring</title>
+  <meta name="description" content="Modified Rankin Scale Calculator"/>
+
+<style>
+ 
+
+/* ------- Defaults ------- */
+
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+/*----article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}------*/
+body {
+	line-height: 1;
+}
+
+table {
+border-collapse:collapse;
+	border-spacing: 1; 
+}
+table, td, th {
+    border: 3px solid #feffef;
+    padding:5px;
+    text-align:left;
+    background-color:#E0E0E0;/* #ebf6f9; Light blue*/
+}
+/* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media 
+only screen and (max-width: 580px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	tr { border: 2px solid #feffef; }
+	
+	
+	td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 2px solid #feffef; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+	
+	/*
+	Label the data when the table is shrunk
+	
+	td:nth-of-type(1):before { content: "Yes/No"; }
+	td:nth-of-type(2):before { content: "Questions"; }*/
+	
+	
+}
+
+
+/* ------- Main Styling ------- */
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    background-color: #424242; 
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 18px;
+     color: #ffffff;
+     font-weight:700;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #8D6E63;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #90a4ae;
+}
+
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+	background: #ffffff;   
+	    
+}
+.tabcontent h1 {
+  font-size: 24px;
+  font-weight: 700;
+  
+}
+.tabcontent h2 {
+  font-size: 20px;
+  font-weight: 700;
+  
+}
+.tabcontent h3 {
+  font-size: 18px;
+  font-weight: 700;
+  
+}
+.tabcontent p {
+  
+  font-size: 18px;
+  line-height: 1.3em;
+  text-align:left;
+}
+html, body {
+  height: 100%;
+}
+body {
+  width: 100%;
+  background: #FFFFFF;
+  color: #202020;
+  font-family: Karla, "Segoe UI", Roboto, "Helvetica Neue",
+               Helvetica, Arial, sans-serif;
+}
+#Info {padding: 25px;}
+#Info h3{padding-bottom: 10px}
+#Info h2{padding-bottom: 10px}
+#Info p{padding-bottom: 10px}
+
+/* Must have container within body to keep footer at bottom */
+#container {
+  min-height: 100%;
+  position: relative; /* Helps keep footer at bottom */
+  overflow: hidden; /* Ditto */
+  background:#424242;
+}
+header {
+  width: 100%;
+  overflow: hidden; /* Needed to keep logo & nav padding inside */
+  
+}
+
+#logo {
+  margin: 15px auto;
+  padding: 0 20px;
+  max-width: 880px;
+  font-size: 36px;
+  font-weight: 700;
+  text-align:center;
+  color:#ffffff;
+  
+  
+}
+
+
+@media screen and (max-width: 600px){
+    ul.topnav li.right, 
+    ul.topnav li {float: none;}
+}
+
+#content {
+  padding-bottom: 10px; /* To push footer down */
+}
+.contentBar {
+  width: 100%;
+  padding: 30px 0;
+}
+.wrapper {
+  max-width: 920px;
+  margin: 0 auto;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+#content section {
+  margin: 0 20px;
+  -ms-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+#content h1 {
+  font-size: 24px;
+  font-weight: 700;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+#content h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+#content p {
+  margin: 10px 0;
+  font-size: 20px;
+  line-height: 1.5em;
+  text-align:left;
+}
+#content p a {
+  font-weight: 700;
+}
+#first {
+  background:#90a4ae; /*#add8e6 ,#87ceeb; sky blue*/
+}
+sup {
+vertical-align: super;
+font-size: smaller; }
+
+#second {
+  background:#fafafa;  /*#feffef alternative #EAF2D3; /*pale yellowish  grey*/
+}
+#second section {
+  -ms-flex-order: 1;
+  -webkit-order: 1;
+  order: 1;
+}
+/*Styling select option */
+.mySelect {
+width:auto;
+border-radius:3px;
+overflow:hidden;
+background:#E0E0E0;
+font-weight:bold;
+
+}
+/*Styling the reset button */
+.mybutton {
+	background-color:#62757f; /*#246275; blue*/
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+	display:block;
+    margin:auto;
+	cursor:pointer;
+	color:#000000;
+	font-family:arial;
+	font-size:20px;
+	padding:10px 100px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 3px 5px 0 rgba(0,0,0,0.19);
+}
+.mybutton:hover {
+	background-color:#8D6E63;  /*#cd5555; Indian Red3*/
+}
+.mybutton:active {
+	position:relative;
+	top:1px;
+}
+
+
+#third {
+  background:#ffffff; /*#add8e6  alt #87ceeb; sky blue*/
+  
+}
+/* Text box for answer */
+.myTxtbx{background: #ffffff; font-size:1.5em; font-family:monospace; padding: 5px 5px;text-align:center;color:black;}
+
+/*Tooltips or hints to the questions*/
+.tooltip span {
+  opacity: 0;
+  transition: opacity 0s 5s;
+  font-style:italic;
+  
+}
+
+.tooltip:hover span {
+  opacity: 0.75;
+  transition: opacity 0s;
+  font-style:italic;
+  
+}
+
+footer {
+  
+  
+  width: 100%;
+  font-size: 16px;
+  background: #62757f /*#ffffff; white*/
+  color: #ffffff; 
+}
+footer .wrapper {
+  max-width: 900px;
+  padding: 0 10px;
+}
+.footBar {
+  margin: 20px 0; 
+}
+#foot1 > .wrapper {
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+footer section {
+  width: 200px;
+  overflow: hidden;
+}
+footer section h1 {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+
+footer small {
+  padding:  10px;
+  font-size: 14px;
+  text-align:left;
+  line-height: 1.2em;
+  display: block; /* Prevents weird behaviour when text wraps onto new line */
+  color:#ffffff;
+}
+
+@media screen and (max-width: 880px) {
+
+  #content {
+    padding-bottom: 5px;
+  }
+  #foot2 {
+    margin-top: 25px;
+  }
+  #foot2 > .wrapper {
+    display: block;
+  }
+  #foot2 .separator {
+    height: 8px;
+    margin: 2px 0;
+  }
+
+}
+
+@media screen and (max-width: 830px) {
+  
+  
+
+@media screen and (max-width: 730px) {
+
+  
+  #second section {
+    -ms-flex-order: 2;
+    -webkit-order: 2;
+    order: 2;
+  }
+  
+@media screen and (max-width: 570px) {
+
+  #content {
+    padding-bottom: 5px;
+    text-align: center;
+  }
+  .contentBar {
+    padding: 20px 0;
+  }
+  #content .wrapper {
+    display: block;
+  }
+   
+  #foot1 > .wrapper {
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+  #foot1 .separator {
+    -ms-flex: 0 0 auto;
+    -webkit-flex: 0 0 auto;
+    flex: 0 0 auto;
+    height: 2px;
+    margin: 2px 0;
+  }
+  
+}
+@ viewport {
+  width: 100%;
+}
+@-ms-viewport {
+  width: 100%;
+}
+</style>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+
+<body>
+  <div id="container">
+  
+    <header>
+    
+      <div id="logo">
+        
+          <h1>e-smRSq for Modifed Rankin Scale scoring</h1>
+       
+      </div>
+      
+  
+  
+       <div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'Calculator')"  id="defaultOpen">e-smRSq</button>
+  <button class="tablinks" onclick="openTab(event, 'Info')">mRS Scoring Guide</button>
+         </div>
+    
+    </header>
+    <div id="Calculator" class="tabcontent">
+    <div id="content">
+    
+      <div id="first" class="contentBar">
+        <div class="wrapper">
+          <section>
+           <p> The modified Rankin Scale (mRS) is a popular functional outcome measure in stroke and is an ordinal scale ranging from 0 (no symptoms) to 5 (severe
+disability) and 6 (death).<sup>1</sup>The e-smRSq is based on the revised version of the simplified mRS questionnaire (smRSq)<sup>2 ,</sup>&nbsp;<sup>3</sup> and aims to improve the reliability of mRS scoring.</p>
+    <h2>Instructions for use</h2>
+  <p> Ask the patient or proxy the questions below and follow the instructions to get the mRS score.  Hover the cursor over the questions for hints.   		Click the 'Reset' button to begin again.</p>
+          </section>
+        </div>
+      </div>
+      
+      <div id="second" class="contentBar">
+        <div class="wrapper">
+          
+          <section>
+           
+              <form name=form>
+			  
+  <table class="center">
+  <table id="Table">
+  
+ <table border="1"  width="100%">
+  <tr id="alt1"><!-- Row 1 -->
+     <td><h3>Answer this question by selecting 'Yes' or 'No' from the options below. </h3></td><!-- Col 1 -->
+     <td></td><!-- Col 2 -->
+  </tr>
+  <tr id="alt2"><!-- Row 2 -->
+   <td>Can the patient live alone without any  help from another person? This includes bathing, using the toilet, preparing or getting meals, shopping and managing finances.<p><div class="tooltip"><span>Hint:For patients not living alone, could they live alone if they had to? Could they be left alone at home for periods of a week or more without concern? </span></div></p></td><!-- Col 2 -->
+<td><select class="mySelect" id="select1" onchange="show1()">
+	 <option value="Select">Select an option
+	 <option value="Yes">Yes
+	 <option value="No">No
+	 </select></td><!-- Col 1 -->
+  </tr>
+  <tr id="alt3" style="display:none;"><!-- Row 4 -->
+     
+     <td>Can the patient do everything they were doing just before the stroke even if slower and not so much?<p><div class="tooltip"><span>Hint:The patient has some stroke symptoms, whether physical or cognitive but can continue to take part in all previous work,
+     social and leisure activities. A regular activity is defiend as one carried out at least once a month. Not driving because of legal reasons in an otherwise physically able patient is not counted as a disability. </span></div></p></td><!-- Col 2 -->
+<td><select  class="mySelect" id="select2" onchange="show2()">
+	 <option value="Select">Select an option
+	 <option value="Yes">Yes
+	 <option value="No">No
+	 </select></td><!-- Col 1 -->
+  </tr>
+  <tr id="alt4" style="display: none;"><!-- Row 5 -->
+     
+     <td>Is the patient completely back to how they were just before the stroke?<p><div class="tooltip"><span>Hint:The patient should be unaware of any new limitation or symptom caused by the stroke, however minor.</span></div></p></td><!-- Col 2 -->
+<td><select class="mySelect" id="select3" onchange="show3()">
+	 <option value="Select">Select an option
+	 <option value="Yes">Yes
+	 <option value="No">No
+	 </select></td><!-- Col 1 -->
+  </tr>
+  <tr id="alt5" style="display: none;"><!-- Row 6 -->
+     
+     <td>Can the patient walk from one room to another without help from another person?<p><div class="tooltip"><span> Hint:Sticks and other walking aids are allowed. The patient should be able to transfer independently and use the aid without the assistance of another person. Wheelchairs do not count as walking aids.</span></td></p><!-- Col 2 -->
+<td><select class="mySelect" id="select4" onchange="show4()">
+	 <option value="Select">Select an option
+	 <option value="Yes">Yes
+	 <option value="No">No
+	 </select></td><!-- Col 1 -->
+  </tr>
+  <tr id="alt6"  style="display: none;"><!-- Row 7 -->
+     
+     <td>Can the patient sit up in bed without any help?<p><div class="tooltip"><span>Hint: Most patients who cannot sit up in bed unaided are bedridden,often incontinent, needing constant care and attention.Someone else will always need to be available during the day and at times during the night.</span></div></p></td><!-- Col 2 -->
+<td><select class="mySelect" id="select5" onchange="show5()">
+	 <option value="Select">Select an option
+	 <option value="Yes">Yes
+	 <option value="No">No
+	 </select></td><!-- Col 1 -->
+  </tr>
+  </table>
+           </p>
+            
+          </section>
+        </div>
+      </div>
+      
+      <div id="third" class="contentBar">
+        <div class="wrapper">
+         
+          <section>
+              
+			  <div id="textbox1" class="myTxtbx"></div>
+			  <div id="textbox2" class="myTxtbx"></div>
+			  
+     <p><input id="but1" type="reset" value="Reset" align= "middle"  onclick=reset(this.form);wipe_innerhtml(this.form)  class="mybutton"></button></p>
+	
+
+</form>
+</div>
+  
+          </section>
+        </div>
+      </div>
+    
+    </div>
+   <div id="Info" class="tabcontent">
+  <p><h2>The Modified Rankin Scale Scoring Guide<sup>4</sup></h2></p>
+  <p><h3>Score 0 - no symptoms</h3></p><p>Patients  have no residual symptoms after their stroke, not even minor symptoms.</p>
+  <p><h3>Score 1 - no significant disability</h3></p><p>Able to carry out all usual activities despite some symptoms.If patients have any symptoms resulting from the stroke, whether physical or mental, then
+they should be scored at least 1 on the Rankin scale. For example, if they have any new
+difficulty in speech, reading or writing, in physical movement, sensation, vision or
+swallowing, or any change in their mood that does not limit their activities, they still should
+score 1. Patients in this category can continue to take part in all of their previous work,
+social and leisure activities. For this purpose, “usual” is regarded as any activity that they
+used to undertake for a monthly basis or more frequently. An
+inability to drive only because of legal impediment where the participant is
+otherwise physically able would not warrant a score of 2.</p>
+<p><h3>Score 2 - slight disability.</h3></p><p>Able to look after own affairs without assistance, but unable to
+carry out all previous activities. If there is any activity that they used to undertake that they can no longer do since the
+stroke, whether because of a physical limitation or because they have chosen to give up the
+activity as a result of the stroke, then they should be scored 2.  For
+example, a patient would be scored in this category if he used to play golf and is no longer
+able to do so, or if he used to have a job whereas he now no longer works. The patient
+should still be able to look after himself without any daily help. In other words he will be
+able to dress, move around, eat, go to the toilet, prepare simple meals, undertake shopping
+and make short journeys by himself. He will not require any supervision from other people
+and could safely be left at home for periods of a week or more without any concern.</p>
+<p><h3>Score 3 - moderate disability</h3></p><p>These patients require
+some external help for daily activities but are able to walk without assistance. They may
+use a stick or a frame for walking but the assistance of another person is not required for
+this. They will be able to manage daily activities such as dressing, toileting, feeding etc.,
+but will need help for more complex tasks such as shopping, cooking or cleaning or will need to be visited more often than weekly for some other purpose. The external help may simply be advisory, for example supervision for their financial affairs.</p>
+<p><h3>Score 4 - moderately severe disability</h3></p><p>Unable to attend to own body needs without
+assistance and unable to walk unassisted. These
+patients are not independently mobile and will need help with daily tasks such as dressing,
+toileting or eating. They will need to be visited at least daily or will need to live in close
+proximity to a carer. To discriminate patients in category 4 from those in 5, consider whether the patient can regularly be left along for moderate periods of a few hours during the day.</p>
+<p><h3>Score 5 - severe disability</h3></p><p>Requires constant nursing care and attention, bedridden,
+incontinent. Patients who cannot be left alone even for a few hours should be given the score of 5.
+ Someone else will always need to be available
+during the day and at time during the night, although this will not necessarily be a trained
+nurse.</p>
+<p><h3>Score 6 - dead</h3></p>
+<p><h3>General guidance:</h3></p>
+<p>In those with dysphasia or cognitive impairment, interview of both the patient and a proxy may be required. When in doubt between 2 categories,
+always stick to the key discriminators of the scale. If
+there is still some doubt between two alternatives on the scale and both
+options appear equally valid, then the worse option should be chosen.</p>
+</div>
+  
+    <footer>
+      <div id="foot1">
+        <div class="wrapper">
+          <small> <p>References:</p> 
+				  <p>1. van Swieten JC, Koudstaal PJ, Visser MC, Schouten HJ, van Gijn J. Interobserver
+                  agreement for the assessment of handicap in stroke patients.Stroke. 1988;19:604–607.</p>
+				  <p>2. Bruno A, Shah N, Lin C et al. Improving modified Rankin Scale
+				   assessment with a simplified questionnaire.Stroke. 2010;41:1048 –1050.</p>
+  				   <p>3. Bruno A, Akinwuntan AE, Lin C et al. Simplified modified rankin scale questionnaire: Reproducibility over the telephone and    			validation with quality of life. Stroke. 2011;42:2276-2279. </p>
+<p>4. SITS Open. How to perform Modified Rankin Scale Assessments.www.sitsinternational.org</p>
+		          </small>
+        </div>
+       </div>
+    </footer>
+    </div>
+	 <script>
+//function controlling tabs
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+//function controlling which questions are shown in response to selections
+function show1(){
+ var a = document.getElementById("select1").value;
+ if (a == "Yes"){
+ var result_style2 = document.getElementById('alt3').style;
+result_style2.display = 'table-row';
+var result_style1 = document.getElementById('alt2').style;
+result_style1.display = 'none';
+}
+else{ 
+var result_style3 = document.getElementById('alt5').style;
+result_style3.display = 'table-row';
+var result_style1 = document.getElementById('alt2').style;
+result_style1.display = 'none';
+}
+ 
+ }
+ function show2(){
+ var b = document.getElementById("select2").value;
+ if (b == "Yes"){
+ var result_style4 = document.getElementById('alt4').style;
+result_style4.display = 'table-row';
+var result_style2 = document.getElementById('alt3').style;
+result_style2.display = 'none';
+}
+else{ 
+var result_style2 = document.getElementById('alt3').style;
+result_style2.display = 'none';
+var result_style1 = document.getElementById('alt1').style;
+result_style1.display = 'none';
+
+document.getElementById('textbox1').innerHTML = 'mRS score is 2';
+document.getElementById('textbox2').innerHTML = 'Slight disability';
+}
+ 
+ }
+ function show3(){
+ var c = document.getElementById("select3").value;
+ if (c == "Yes"){
+ var result_style1 = document.getElementById('alt1').style;
+result_style1.display = 'none';
+ var result_style4 = document.getElementById('alt4').style;
+result_style4.display = 'none';
+document.getElementById('textbox1').innerHTML = 'mRS score is 0';
+document.getElementById('textbox2').innerHTML = 'No symptoms';
+}
+else{ 
+ var result_style1 = document.getElementById('alt1').style;
+result_style1.display = 'none';
+ var result_style4 = document.getElementById('alt4').style;
+result_style4.display = 'none';
+document.getElementById('textbox1').innerHTML = 'mRS score is 1';
+document.getElementById('textbox2').innerHTML = 'No significant disability despite symptoms';
+
+}
+ 
+ }
+ function show4(){
+ var d = document.getElementById("select4").value;
+ if (d == "Yes"){
+ var result_style1 = document.getElementById('alt1').style;
+result_style1.display = 'none';
+ var result_style5 = document.getElementById('alt5').style;
+result_style5.display = 'none';
+document.getElementById('textbox1').innerHTML = 'mRS score is 3';
+document.getElementById('textbox2').innerHTML = 'Moderate disability';
+}
+else{ 
+ var result_style5 = document.getElementById('alt5').style;
+result_style5.display = 'none';
+ var result_style6 = document.getElementById('alt6').style;
+result_style6.display = 'table-row';
+
+}
+ 
+ }
+function show5(){
+ var e = document.getElementById("select5").value;
+ if (e == "Yes"){
+ var result_style1 = document.getElementById('alt1').style;
+result_style1.display = 'none';
+ var result_style6 = document.getElementById('alt6').style;
+result_style6.display = 'none';
+document.getElementById('textbox1').innerHTML = 'mRS score is 4';
+document.getElementById('textbox2').innerHTML = 'Moderately severe disability';
+}
+else{ 
+  var result_style1 = document.getElementById('alt1').style;
+result_style1.display = 'none';
+ var result_style6 = document.getElementById('alt6').style;
+result_style6.display = 'none';
+document.getElementById('textbox1').innerHTML = 'mRS score is 5';
+document.getElementById('textbox2').innerHTML = 'Severe disability';
+
+}
+ 
+ }
+
+
+function wipe_innerhtml() {
+
+document.getElementById('textbox1').innerHTML = '';
+document.getElementById('textbox2').innerHTML = '';
+document.getElementById('alt2').style.display="none";
+document.getElementById('alt3').style.display="none";
+document.getElementById('alt4').style.display="none";
+document.getElementById('alt5').style.display="none";
+document.getElementById('alt6').style.display="none";
+var result_style1 = document.getElementById('alt1').style;
+result_style1.display = 'table-row';
+var result_style2 = document.getElementById('alt2').style;
+result_style2.display = 'table-row';
+var result_style3 = document.getElementById('alt3').style;
+result_style3.display = 'none';
+var result_style6 = document.getElementById('alt6').style;
+result_style6.display = 'none';
+var result_style7 = document.getElementById('alt7').style;
+result_style7.display = 'none';
+var result_style8 = document.getElementById('alt8').style;
+result_style8.display = 'none';
+
+}
+
+</script>           
+</body>
+</html>
